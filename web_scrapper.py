@@ -5,17 +5,27 @@ Author : LOX
 """
 
 import requests
-import os 
-
-user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36'
+from bs4 import BeautifulSoup
+import urlencode
 word = 'bite'
 url = 'http://www.synonymo.fr/syno/' + word
-r = requests.get(url)
-raw_text = r.text
+get = requests.get(url)
+html = get.text
 
-raw_text = str(raw_text)
-# Write synonyms to a new file
-file = word + '.txt'
-out = open(file , 'a')
-out.write(raw_text)
-out.close()
+
+
+soup = BeautifulSoup(html)
+raw_text = soup.prettify()
+
+ul = soup.find('ul', {'class':'synos'})
+
+first = ul.findAll('a')
+synos = []
+for i in first:
+    synos.append(i.next)
+
+# # Write synonyms to a new file
+# file = word + '.txt'
+# out = open(file , 'a')
+# out.write(raw_text)
+# out.close()
